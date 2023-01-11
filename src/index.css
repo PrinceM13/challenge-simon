@@ -8,13 +8,12 @@ body {
 }
 
 .color-card {
-  width: 50%;
-  padding: 2%;
+  background-color: grey;
+  padding-bottom: 100%;
 }
-
-.square:after {
+/* .square:after {
   background-color: grey;
   content: "";
   display: block;
   padding-bottom: 100%;
-}
+} */
