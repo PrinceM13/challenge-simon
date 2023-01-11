@@ -11,9 +11,30 @@ body {
   background-color: grey;
   padding-bottom: 100%;
 }
+
 /* .square:after {
   background-color: grey;
   content: "";
   display: block;
   padding-bottom: 100%;
 } */
+
+.s-green {
+  background-color: #3edd4b;
+}
+
+.s-red {
+  background-color: #dd4b3e;
+}
+
+.s-yellow {
+  background-color: #ffea37;
+}
+
+.s-blue {
+  background-color: #4b3edd;
+}
+
+.light {
+  opacity: 0.3;
+}
