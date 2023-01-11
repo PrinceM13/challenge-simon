@@ -8,7 +8,7 @@ export default function ColorBoard() {
         <div className="row color-board">
             {
                 colorArr.map((el, idx) => (
-                    <ColorCard key={idx} color={el} isColorActive={isColorActive[el]} />
+                    <ColorCard key={idx} color={el} isActive={isColorActive[el]} />
                 ))
             }
         </div>
