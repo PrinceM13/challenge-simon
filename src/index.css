@@ -19,22 +19,22 @@ body {
   padding-bottom: 100%;
 } */
 
-.s-green {
+.colorGreen {
   background-color: #3edd4b;
 }
 
-.s-red {
+.colorRed {
   background-color: #dd4b3e;
 }
 
-.s-yellow {
+.colorYellow {
   background-color: #ffea37;
 }
 
-.s-blue {
+.colorBlue {
   background-color: #4b3edd;
 }
 
-.light {
+.inactive {
   opacity: 0.3;
 }
