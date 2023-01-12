@@ -15,6 +15,7 @@ export const INITIAL_GAME = {
 export const gameReducer = (state, action) => {
     switch (action.type) {
         case SET_INITIAL_STATE: return action.payload;
+        case START_GAME: return action.payload;
         default: return state;
     }
 }
