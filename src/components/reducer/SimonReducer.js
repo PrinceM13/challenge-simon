@@ -1,6 +1,8 @@
 // constant
+export const START_GAME = 'START_GAME';
 export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
-export const START_GAME = 'START_GAME'
+export const SET_SIMON_COLORS = 'SET_SIMON_COLORS';
+export const SET_PLAYER_TURN = 'SET_PLAYER_TURN';
 
 // initial
 export const INITIAL_GAME = {
@@ -14,8 +16,10 @@ export const INITIAL_GAME = {
 // gameReducer
 export const gameReducer = (state, action) => {
     switch (action.type) {
-        case SET_INITIAL_STATE: return action.payload;
         case START_GAME: return action.payload;
+        case SET_INITIAL_STATE: return action.payload;
+        case SET_SIMON_COLORS: return action.payload;
+        case SET_PLAYER_TURN: return action.payload;
         default: return state;
     }
 }
