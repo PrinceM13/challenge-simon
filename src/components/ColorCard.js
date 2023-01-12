@@ -1,11 +1,11 @@
 import { useSimon } from "./context/SimonContext";
 
-export default function ColorCard({ color, isColorActive }) {
-    const colorCardState = `${color} ${isColorActive ? '' : 'inactive'}`;
-    const { setColorCardState } = useSimon();
+export default function ColorCard({ color }) {
+    const colorCardState = `${color}` // ${isColorActive ? '' : 'inactive'}`;
+    const { } = useSimon();
 
     const handleClick = () => {
-        setColorCardState({ [color]: !isColorActive })
+
     }
 
     return (

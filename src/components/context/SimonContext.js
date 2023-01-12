@@ -1,21 +1,21 @@
-import { createContext, useContext, useReducer } from "react";
-import { colorActiveReducer, INITIAL_COLOR, SET_COLOR_CARD_STATE } from "../reducer/SimonReducer";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
+import { gameReducer, INITIAL_GAME, SET_INITIAL_STATE, START_GAME } from "../reducer/SimonReducer";
 
 const SimonContext = createContext();
 
 export default function SimonContextProvider({ children }) {
+    const [isPlay, setIsPlay] = useState(false);
     // useReducer
-    const [isColorActive, dispatchColor] = useReducer(colorActiveReducer, INITIAL_COLOR);
+    const [game, dispatchGame] = useReducer(gameReducer, INITIAL_GAME);
 
-    // set ColorCard state ------------------------------------------------------------------------
-    const setColorCardState = (obj) => {
-        const tempObj = { ...isColorActive, ...obj }
-        dispatchColor({ type: SET_COLOR_CARD_STATE, payload: tempObj });
-    }
-    // --------------------------------------------------------------------------------------------
+    // state 1: initialize
+    useEffect(() => {
+        if (isPlay) dispatchGame({ type: START_GAME, payload: { ...INITIAL_GAME, simonTurn: true } });
+        else dispatchGame({ type: SET_INITIAL_STATE, payload: INITIAL_GAME });
+    }, [isPlay]);
 
     return (
-        <SimonContext.Provider value={{ isColorActive, setColorCardState }}>
+        <SimonContext.Provider value={{ isPlay, setIsPlay }}>
             {children}
         </SimonContext.Provider>
     );
