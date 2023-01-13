@@ -1,12 +1,10 @@
 import { useSimon } from "./context/SimonContext";
 
 export default function ColorCard({ color }) {
-    const { blinkColor } = useSimon();
+    const { blinkColor, handleCardClick } = useSimon();
     const colorCardState = `${color} ${blinkColor === color ? '' : 'inactive'}`;
 
-    const handleClick = () => {
-
-    }
+    const handleClick = () => handleCardClick(color);
 
     return (
         <div className="col-6 p-1">

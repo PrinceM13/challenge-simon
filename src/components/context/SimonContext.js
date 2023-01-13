@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
-import { gameReducer, INITIAL_GAME, SET_INITIAL_STATE, SET_PLAYER_TURN, SET_SIMON_COLORS, START_GAME } from "../reducer/SimonReducer";
+import { END_GAME, gameReducer, INITIAL_GAME, SET_INITIAL_STATE, SET_PLAYER_NEW_COLORS, SET_PLAYER_TURN, SET_SIMON_COLORS, START_GAME } from "../reducer/SimonReducer";
 import { timeout } from "../utilities/utilities";
 
 const SimonContext = createContext();
@@ -54,8 +54,37 @@ export default function SimonContextProvider({ children }) {
     }
     // -------------------------------------------------------------------------------------------------------
 
+    // state 3: Player's turn --------------------------------------------------------------------------------
+    const handleCardClick = async (color) => {
+        // handle click just when isPlay = true and it's also Player turn
+        if (isPlay && game.playerTurn) {
+            const tempPlayerColorsArr = [...game.playerColors];
+            const currentColor = tempPlayerColorsArr.shift();
+            setBlinkColor(color);
+
+            if (currentColor === color) {
+                if (tempPlayerColorsArr.length) {
+                    // Player need to play at least 1 more color
+                    dispatchGame({ type: SET_PLAYER_NEW_COLORS, payload: { ...game, playerColors: tempPlayerColorsArr } })
+                } else {
+                    // last color now, need to setup for next level (set to initial game for now, will update later)
+                    dispatchGame({ type: END_GAME, payload: INITIAL_GAME });
+                    alert('YOU WON!!!')
+                }
+            } else {
+                // selet wrong color, so it's the end of the game
+                dispatchGame({ type: END_GAME, payload: INITIAL_GAME });
+                setIsPlay(false);
+                alert('GAME OVER')
+            }
+            await timeout(350);
+            setBlinkColor('');
+        }
+    }
+    // -------------------------------------------------------------------------------------------------------
+
     return (
-        <SimonContext.Provider value={{ isPlay, setIsPlay, blinkColor }}>
+        <SimonContext.Provider value={{ isPlay, setIsPlay, blinkColor, handleCardClick }}>
             {children}
         </SimonContext.Provider>
     );
