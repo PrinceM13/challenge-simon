@@ -2,13 +2,13 @@ import { useSimon } from "./context/SimonContext";
 
 
 export default function Header() {
-    const { isPlay, setIsPlay } = useSimon();
+    const { game, isPlay, setIsPlay } = useSimon();
 
     const handleNewGame = () => setIsPlay(true);
 
     const NewGameButton = <button className="btn btn-secondary" onClick={handleNewGame}>New Game</button>;
     const ScoreDisplay = <>
-        <h5>Current Score: 0</h5>
+        <h5>Current Score: {game.score}</h5>
         <h5>High Score: 0</h5>
     </>
     return (

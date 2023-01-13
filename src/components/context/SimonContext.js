@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
-import { END_GAME, gameReducer, INITIAL_GAME, SET_INITIAL_STATE, SET_PLAYER_NEW_COLORS, SET_PLAYER_TURN, SET_SIMON_COLORS, START_GAME } from "../reducer/SimonReducer";
+import { END_GAME, gameReducer, INITIAL_GAME, SET_INITIAL_STATE, SET_NEXT_LEVEL, SET_PLAYER_NEW_COLORS, SET_PLAYER_TURN, SET_SIMON_COLORS, START_GAME } from "../reducer/SimonReducer";
 import { timeout } from "../utilities/utilities";
 
 const SimonContext = createContext();
 
 export default function SimonContextProvider({ children }) {
+    // constant
+    const colorsArr = ['green', 'red', 'yellow', 'blue'];
+
     // useState
     const [isPlay, setIsPlay] = useState(false);    // start-stop game
     const [blinkColor, setBlinkColor] = useState('');
@@ -21,14 +24,19 @@ export default function SimonContextProvider({ children }) {
 
     // state 2: Simon's turn ---------------------------------------------------------------------------------
     useEffect(() => {
-        const IsSimonColorsValid = Boolean(game.simonColors.length);
         // set Simon's colors
-        if (isPlay && game.simonTurn && !IsSimonColorsValid) {
-            const mockUpColors = ['green', 'yellow', 'red', 'red', 'blue', 'green', 'yellow'];
-            dispatchGame({ type: SET_SIMON_COLORS, payload: { ...game, simonColors: mockUpColors } });
+        if (isPlay && game.simonTurn) {
+            const newColor = colorsArr[Math.floor(4 * Math.random())];
+            const tempColorsArr = [...game.simonColors, newColor];
+            dispatchGame({ type: SET_SIMON_COLORS, payload: { ...game, simonColors: tempColorsArr } });
         }
+    }, [isPlay, game.simonTurn]);
+
+    // need to split into 2 useEffect, to avoid infinity re-render due to updating value in dependency array [game.simonColors.length]
+    useEffect(() => {
         // show Simon's colors to Player
-        else if (isPlay && game.simonTurn && IsSimonColorsValid) {
+        const IsSimonColorsValid = Boolean(game.simonColors.length);
+        if (isPlay && game.simonTurn && IsSimonColorsValid) {
             showColors();
         }
     }, [isPlay, game.simonTurn, game.simonColors.length]);
@@ -65,11 +73,17 @@ export default function SimonContextProvider({ children }) {
             if (currentColor === color) {
                 if (tempPlayerColorsArr.length) {
                     // Player need to play at least 1 more color
-                    dispatchGame({ type: SET_PLAYER_NEW_COLORS, payload: { ...game, playerColors: tempPlayerColorsArr } })
+                    dispatchGame({ type: SET_PLAYER_NEW_COLORS, payload: { ...game, playerColors: tempPlayerColorsArr } });
                 } else {
-                    // last color now, need to setup for next level (set to initial game for now, will update later)
-                    dispatchGame({ type: END_GAME, payload: INITIAL_GAME });
-                    alert('YOU WON!!!')
+                    // setup for next level
+                    const updateObjGame = {
+                        ...game,
+                        score: game.simonColors.length,
+                        playerColors: [],
+                        playerTurn: false,
+                        simonTurn: true,
+                    }
+                    dispatchGame({ type: SET_NEXT_LEVEL, payload: updateObjGame });
                 }
             } else {
                 // selet wrong color, so it's the end of the game
@@ -84,7 +98,7 @@ export default function SimonContextProvider({ children }) {
     // -------------------------------------------------------------------------------------------------------
 
     return (
-        <SimonContext.Provider value={{ isPlay, setIsPlay, blinkColor, handleCardClick }}>
+        <SimonContext.Provider value={{ game, isPlay, setIsPlay, blinkColor, handleCardClick, colorsArr }}>
             {children}
         </SimonContext.Provider>
     );

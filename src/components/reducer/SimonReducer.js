@@ -4,6 +4,7 @@ export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
 export const SET_SIMON_COLORS = 'SET_SIMON_COLORS';
 export const SET_PLAYER_TURN = 'SET_PLAYER_TURN';
 export const SET_PLAYER_NEW_COLORS = 'SET_PLAYER_NEW_COLORS'
+export const SET_NEXT_LEVEL = 'SET_NEXT_LEVEL'
 export const END_GAME = 'END_GAME';
 
 // initial
@@ -23,6 +24,7 @@ export const gameReducer = (state, action) => {
         case SET_SIMON_COLORS: return action.payload;
         case SET_PLAYER_TURN: return action.payload;
         case SET_PLAYER_NEW_COLORS: return action.payload;
+        case SET_NEXT_LEVEL: return action.payload;
         case END_GAME: return action.payload;
         default: return state;
     }
