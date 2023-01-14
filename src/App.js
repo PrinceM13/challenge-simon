@@ -7,7 +7,7 @@ function App() {
   return (
     <SimonContextProvider>
       <div className="container" style={{ maxWidth: 600 }}>
-        <div className="d-flex flex-column justify-content-center">
+        <div className="d-flex flex-column justify-content-center gap-3">
           <Header />
           <ColorBoard />
           <Footer />

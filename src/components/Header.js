@@ -12,7 +12,7 @@ export default function Header() {
     </>
 
     return (
-        <div className="text-center d-flex flex-column align-items-center">
+        <div className="text-center d-flex flex-column align-items-center gap-3">
             <h1>{game.message || 'SIMON GAME'}</h1>
             <div className="d-flex flex-column">
                 {isPlay ? scoreDisplay : newGameButton}
