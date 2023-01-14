@@ -18,8 +18,8 @@ export default function Footer() {
         </div>
     </>
     return (
-        <div className="d-flex justify-content-center gap-3">
-            {game.message === GAME_OVER_MESSAGE ? playAgain : null}
+        <div className="d-flex justify-content-center align-items-center gap-3">
+            {game.message === GAME_OVER_MESSAGE && playAgain}
         </div>
     );
 }

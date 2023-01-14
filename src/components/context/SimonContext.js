@@ -43,13 +43,12 @@ export default function SimonContextProvider({ children }) {
     }, [isPlay, game.simonTurn, game.simonColors.length]);
 
     const showColors = async () => {
-        await timeout(800); // wait between NewGameButton <--> start Simon's turn
         // consequently blink each colors
         for (let i = 0; i < game.simonColors.length; i++) {
+            await timeout();
             setBlinkColor(game.simonColors[i]);
-            await timeout(350);
+            await timeout();
             setBlinkColor('');
-            await timeout(500);
         }
         // update game: end Simon's turn | start Player's turn | Player's colors
         const tempArrColors = [...game.simonColors];
@@ -58,6 +57,7 @@ export default function SimonContextProvider({ children }) {
             playerTurn: true,
             playerColors: tempArrColors
         };
+        await timeout(); // delay for turn display
         dispatchGame({ type: UPDATE, payload: updateObjGame });
     }
     // -------------------------------------------------------------------------------------------------------
@@ -69,7 +69,9 @@ export default function SimonContextProvider({ children }) {
             const tempPlayerColorsArr = [...game.playerColors];
             const currentColor = tempPlayerColorsArr.shift();
             setBlinkColor(color);
-
+            await timeout(80);
+            setBlinkColor('');
+            await timeout(80);
             if (currentColor === color) {
                 if (tempPlayerColorsArr.length) {
                     // Player need to play at least 1 more color
@@ -81,10 +83,11 @@ export default function SimonContextProvider({ children }) {
                         playerTurn: false,
                         simonTurn: true,
                     }
+                    await timeout(); // delay for turn display
                     dispatchGame({ type: NEXT_LEVEL, payload: updateObjGame });
                 }
             } else {
-                // selet wrong color, so it's the end of the game
+                // select wrong color, so it's the end of the game
                 if (game.simonColors.length - 1 > highScore) setHighScore(game.simonColors.length - 1);
                 const updateObjGame = {
                     simonColors: [],
@@ -92,8 +95,6 @@ export default function SimonContextProvider({ children }) {
                 };
                 dispatchGame({ type: END_GAME, payload: updateObjGame });
             }
-            await timeout(350);
-            setBlinkColor('');
         }
     }
     // -------------------------------------------------------------------------------------------------------

@@ -1,1 +1,1 @@
-export const timeout = async (ms) => new Promise(resolve => setTimeout(resolve, ms));
+export const timeout = async (ms = 200) => new Promise(resolve => setTimeout(resolve, ms));
