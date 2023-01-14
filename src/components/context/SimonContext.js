@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
-import { END_GAME, gameReducer, INITIAL_GAME, SET_INITIAL_STATE, SET_NEXT_LEVEL, SET_PLAYER_NEW_COLORS, SET_PLAYER_TURN, SET_SIMON_COLORS, START_GAME } from "../reducer/SimonReducer";
+import { END_GAME, gameReducer, INITIAL_GAME, INITIAL_STATE, NEXT_LEVEL, START_GAME, UPDATE } from "../reducer/SimonReducer";
 import { timeout } from "../utilities/utilities";
 
 const SimonContext = createContext();
@@ -9,16 +9,17 @@ export default function SimonContextProvider({ children }) {
     const colorsArr = ['green', 'red', 'yellow', 'blue'];
 
     // useState
-    const [isPlay, setIsPlay] = useState(false);    // start-stop game
-    const [blinkColor, setBlinkColor] = useState('');
+    const [isPlay, setIsPlay] = useState(false);        // start-stop game
+    const [blinkColor, setBlinkColor] = useState('');   // set color to blink (active)
+    const [highScore, setHighScore] = useState(0);      // store and update high score
 
     // useReducer
     const [game, dispatchGame] = useReducer(gameReducer, INITIAL_GAME);
 
     // state 1: initialize -----------------------------------------------------------------------------------
     useEffect(() => {
-        if (isPlay) dispatchGame({ type: START_GAME, payload: { ...INITIAL_GAME, simonTurn: true } });
-        else dispatchGame({ type: SET_INITIAL_STATE, payload: INITIAL_GAME });
+        if (isPlay) dispatchGame({ type: START_GAME });
+        else dispatchGame({ type: INITIAL_STATE });
     }, [isPlay]);
     // -------------------------------------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ export default function SimonContextProvider({ children }) {
         if (isPlay && game.simonTurn) {
             const newColor = colorsArr[Math.floor(4 * Math.random())];
             const tempColorsArr = [...game.simonColors, newColor];
-            dispatchGame({ type: SET_SIMON_COLORS, payload: { ...game, simonColors: tempColorsArr } });
+            dispatchGame({ type: UPDATE, payload: { simonColors: tempColorsArr } });
         }
     }, [isPlay, game.simonTurn]);
 
@@ -53,12 +54,11 @@ export default function SimonContextProvider({ children }) {
         // update game: end Simon's turn | start Player's turn | Player's colors
         const tempArrColors = [...game.simonColors];
         const updateObjGame = {
-            ...game,
             simonTurn: false,
             playerTurn: true,
             playerColors: tempArrColors
         };
-        dispatchGame({ type: SET_PLAYER_TURN, payload: updateObjGame });
+        dispatchGame({ type: UPDATE, payload: updateObjGame });
     }
     // -------------------------------------------------------------------------------------------------------
 
@@ -73,23 +73,24 @@ export default function SimonContextProvider({ children }) {
             if (currentColor === color) {
                 if (tempPlayerColorsArr.length) {
                     // Player need to play at least 1 more color
-                    dispatchGame({ type: SET_PLAYER_NEW_COLORS, payload: { ...game, playerColors: tempPlayerColorsArr } });
+                    dispatchGame({ type: UPDATE, payload: { playerColors: tempPlayerColorsArr } });
                 } else {
                     // setup for next level
                     const updateObjGame = {
-                        ...game,
-                        score: game.simonColors.length,
                         playerColors: [],
                         playerTurn: false,
                         simonTurn: true,
                     }
-                    dispatchGame({ type: SET_NEXT_LEVEL, payload: updateObjGame });
+                    dispatchGame({ type: NEXT_LEVEL, payload: updateObjGame });
                 }
             } else {
                 // selet wrong color, so it's the end of the game
-                dispatchGame({ type: END_GAME, payload: INITIAL_GAME });
-                setIsPlay(false);
-                alert('GAME OVER')
+                if (game.simonColors.length - 1 > highScore) setHighScore(game.simonColors.length - 1);
+                const updateObjGame = {
+                    simonColors: [],
+                    playerColors: []
+                };
+                dispatchGame({ type: END_GAME, payload: updateObjGame });
             }
             await timeout(350);
             setBlinkColor('');
@@ -98,7 +99,7 @@ export default function SimonContextProvider({ children }) {
     // -------------------------------------------------------------------------------------------------------
 
     return (
-        <SimonContext.Provider value={{ game, isPlay, setIsPlay, blinkColor, handleCardClick, colorsArr }}>
+        <SimonContext.Provider value={{ game, dispatchGame, isPlay, setIsPlay, blinkColor, handleCardClick, colorsArr, highScore }}>
             {children}
         </SimonContext.Provider>
     );

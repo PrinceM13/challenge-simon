@@ -1,21 +1,21 @@
 import { useSimon } from "./context/SimonContext";
 
-
 export default function Header() {
-    const { game, isPlay, setIsPlay } = useSimon();
+    const { game, isPlay, setIsPlay, highScore } = useSimon();
 
     const handleNewGame = () => setIsPlay(true);
 
-    const NewGameButton = <button className="btn btn-secondary" onClick={handleNewGame}>New Game</button>;
-    const ScoreDisplay = <>
+    const newGameButton = <button className="btn btn-secondary" onClick={handleNewGame}>New Game</button>;
+    const scoreDisplay = <>
         <h5>Current Score: {game.score}</h5>
-        <h5>High Score: 0</h5>
+        <h5>High Score: {highScore}</h5>
     </>
+
     return (
-        <div className="text-center d-flex flex-column pt-5 gap-3 align-items-center">
-            <h1>SIMON GAME</h1>
-            <div className="d-flex flex-column mb-3">
-                {isPlay ? ScoreDisplay : NewGameButton}
+        <div className="text-center d-flex flex-column align-items-center">
+            <h1>{game.message || 'SIMON GAME'}</h1>
+            <div className="d-flex flex-column">
+                {isPlay ? scoreDisplay : newGameButton}
             </div>
         </div>
     );
