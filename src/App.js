@@ -1,13 +1,19 @@
+import ColorBoard from "./components/ColorBoard";
+import SimonContextProvider from "./components/context/SimonContext";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+
 function App() {
   return (
-    <div className="container">
-      <h1 className="text-primary">matching game</h1>
-      <div className="btn-group">
-        <button className="btn btn-m btn-outline-success">Start <i class="fa-regular fa-circle-play"></i></button>
-        <button className="btn btn-m btn-outline-secondary">Pause <i class="fa-regular fa-circle-pause"></i></button>
-        <button className="btn btn-m btn-outline-danger">Stop <i class="fa-regular fa-circle-stop"></i></button>
+    <SimonContextProvider>
+      <div className="container" style={{ maxWidth: 600 }}>
+        <div className="d-flex flex-column justify-content-center gap-3">
+          <Header />
+          <ColorBoard />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </SimonContextProvider>
   );
 }
 
