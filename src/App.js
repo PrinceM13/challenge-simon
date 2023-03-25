@@ -1,5 +1,5 @@
 import ColorBoard from "./components/ColorBoard";
-import SimonContextProvider from "./components/context/SimonContext";
+import SimonContextProvider from "./context/SimonContext";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
